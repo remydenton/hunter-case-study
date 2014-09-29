@@ -104,18 +104,107 @@
 
 				<section>
 					<h2>4. Using domain context to build two sites in one</h2>
+					<ol>
+					 <li class="fragment">We run both US and CA sites off of one Drupal site without using Localization</li>
+					 <li class="fragment">Relies on both contexts and country codes/domains set in the settings.php file</li>
+					 <li class="fragment">Product availability is specified using "Available In" fields as well as country specific pricing fields</li>
+					</ol>
+					<aside class="notes" data-markdown>
+            * Uses domains set in settings.php file to allow testing of which domain we are on
+            * uses contexts
+            * allows easy management by editors
+          </aside>
 				</section>
+				
+				<section>
+          <h2>4.1. Why didn't we use localization?</h2>
+          <ol>
+           <li class="fragment">Localization requires the creation of duplicate content for each country.</li>
+           <li class="fragment">This would be additional work for content editors, as well as be very complex when integrated with our product/product display methodology.</li>
+          </ol>
+          <aside class="notes" data-markdown>
+            * Touch on the difficult nature of having to have duplicate content for every node for localization
+            * Review the product/product display plans. Product is a specific item, ex. pink hunter welly boot. Where as the product displays are a group of products ex, Welly Boot.
+          </aside>
+        </section>
+
+        <section>
+          <h2>4.2. What did we use? Settings.php in conjunction with Contexts</h2>
+          <ol>
+           <li class="fragment">Within settings.php we define Country codes that contain the domains associated with each country as well as much more information.</li>
+           <li class="fragment">Relies on both contexts and country codes/domains set in the settings.php file</li>
+           <li class="fragment">Product availability is specified using "Available In" fields as well as country specific pricing fields</li>
+          </ol>
+          <aside class="notes" data-markdown>
+            * Use domains set in settings.php file to allow testing of which domain we are on
+            * use contexts
+          </aside>
+        </section>
+        
+        <section>
+          <h3>4.2.1. Settings.php Example</h3>
+          <img width="650" src="./img/settings-php-countries.jpg" />
+          <aside class="notes" data-markdown>
+            * Review all the line items
+            * Mobile vs desktop urls
+            * pricing
+            * different frontpages
+            * different cybersource gateways
+            * defines different fields
+            * we have helper functions that will retrieve country code and settings based on domain
+          </aside>
+        </section>
+        
+        <section>
+          <h3>4.2.2. Context Example #1</h3>
+          <img width="650" src="./img/context1.jpg" />
+          <aside class="notes" data-markdown>
+            * context set based on domain
+            * used by payment gateways and other areas to select correct choices
+          </aside>
+        </section>
+        
+        <section>
+          <h3>4.2.3. Context Example #2</h3>
+          <img width="650" src="./img/context2.jpg" />
+          <aside class="notes" data-markdown>
+            * here you see how a payment option is selected based on domain context
+          </aside>
+        </section>
+        
+        <section>
+          <h2>4.3. Custom fields are used for stock, availability and price</h2>
+          <img width="850" src="./img/field-countries.jpg" />
+          <aside class="notes" data-markdown>
+            * fields example of country specific data
+            * available in
+            * country specific prices
+          </aside>
+        </section>
 
 				<section>
 					<h2>5. Integrating with fulfillment warehouses</h2>
+					<aside class="notes" data-markdown>
+            * We must integrate with NLS(Canada) and Powerhouse(USA) warehouse systems.
+            * Based on feeds and services
+          </aside>
 				</section>
 
 				<section>
 					<h2>6. Integrating with Retail Pro</h2>
+					<aside class="notes" data-markdown>
+            * The project is enormous.  Rather than try to talk about everything, we've picked a few favorite parts.
+            * Common problems, you've probably encountered in one form or another, solutions you might use.
+          </aside>
 				</section>
 
 				<section>
 					<h2>7. Using GEO IP lookup</h2>
+					<aside class="notes" data-markdown>
+            * Using popup instead of redirects
+            * smartip and custom JS
+            * ajax callback to get around varnish 
+          </aside>
 				</section>
 
 				<section>
