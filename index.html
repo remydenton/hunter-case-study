@@ -200,12 +200,29 @@
 
 				<section>
 					<h2>7. Using GEO IP lookup</h2>
+					<img width="850" src="./img/countryselector.jpg" />
 					<aside class="notes" data-markdown>
             * Using popup instead of redirects
-            * smartip and custom JS
-            * ajax callback to get around varnish 
+            * This is the future of GeoIP instead of forced redirects
           </aside>
 				</section>
+				
+        <section>
+          <h2>7.1. Utlizes SmartIP in conjunction with custom AJAX callback</h2>
+          <ol>
+            <li class="fragment">Integrates with Maxmind Geo Lookup services using the SmartIP module</li>
+            <li class="fragment">
+              AJAX callback function returns the current country, visitors country and other data.
+              <img class="fragment" src="./img/iplookup.jpg" />
+            </li>
+          </ol>
+          <aside class="notes" data-markdown>
+            * smartip and custom JS
+            * ajax callback to get around varnish, must exclude /ajax paths from varnish cache.
+            * must set necessary proxy values in settings.php to avoid the drupal ip() function from returning proxys IP
+            * touch on the fact that the hunter_misc_get_country_code utilizes the functions discussed in the country context/settings info earlier
+          </aside>
+        </section>
 
 				<section>
 					<h1>THE END</h1>
