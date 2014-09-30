@@ -91,11 +91,39 @@
 				</section>
 
 				<section>
-					<h2>1. Ordering products with draggable views</h2>
+					<h2>1. "Merchandising" products using draggable views</h2>
+					<p>Problem: Admins want to be able to change order of product displays in a view</p>
+					<img src="images/product-listing.png"/>
 				</section>
 
 				<section>
-					<h2>2. Uploading new products with feeds</h2>
+					<h3>Original Solution</h3>
+					<p>Add a "Product Order" field to the product display content type.</p>
+					<img src="images/product-order-field.png"/>
+				</section>
+
+				<section>
+					<h3>Why is this a terrible idea?</h3>
+					<div><img src="images/product-listing.png"/></div>
+					<ul>
+						<li class="fragment">Miserable to maintain</li>
+						<li class="fragment">Not flexible</li>
+					</ul>
+					<aside class="notes" data-markdown>
+						Describe moving one product to the top of the list
+						   - Guess at the weight
+						   - Even worse if it's a specific spot
+						Flexibility: pages using the same view with different contextual filters
+					</aside>
+				</section>
+
+				<section>
+					<h3>A Better solution</h3>
+					<p>Add a <a href="https://www.drupal.org/project/draggableviews">draggable views</a> attachment to the view</p>
+				</section>
+
+				<section>
+					<h2>2. Uploading new products using feeds</h2>
 				</section>
 
 				<section>
