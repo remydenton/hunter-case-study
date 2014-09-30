@@ -112,7 +112,7 @@
 					<aside class="notes" data-markdown>
 						Describe moving one product to the top of the list
 						   - Guess at the weight
-						   - Even worse if it's a specific spot
+						   - Even worse if moving to a specific spot (must know weight of before and after nodes)
 						Flexibility: pages using the same view with different contextual filters
 					</aside>
 				</section>
@@ -124,10 +124,70 @@
 
 				<section>
 					<h2>2. Uploading new products using feeds</h2>
+					<p>Problem: Several times a year, Hunter adds a lot of new product</p>
+				</section>
+
+				<section>
+					<h3>How it works</h3>
+					<p>Hunter sends us three things:</p>
+					<ol>
+						<li class="fragment">A spreadsheet of product display nodes</li>
+						<li class="fragment">A spreadsheet of commerce products</li>
+						<li class="fragment">A directory of images</li>
+					</ol>
+					<p>We run two imports:</p>
+					<ol>
+						<li class="fragment">Product display importer</li>
+						<li class="fragment">Commerce product importer</li>
+					</ol>
+					<aside class="notes" data-markdown>
+						- Standard feeds importm, but some tips and tricks
+					</aside>
 				</section>
 
 				<section>
 					<h2>3. Allowing admins to interact with the warehouse</h2>
+					<p>Problem: Admins want to be able to recalculate sales tax.</p>
+				</section>
+
+				<section>
+					<h3>Original Solution</h3>
+					<p>Repost it from the command line.</p>
+					<p><br/></p>
+					<code class="fragment">$ drush ev hunter_cart_cs_tax_order($order);</code>
+				</section>
+
+				<section>
+					<h3>A Better solution</h3>
+					<p>Create a custom bulk operation.</p>
+				</section>
+
+				<section>
+
+					<pre><code class="php" data-trim contenteditable>
+/**
+ * Implements hook_action_info().
+ */
+function hunter_orders_action_info() {
+  return array(
+    'hunter_orders_update_sales_tax' => array(
+      'type' => 'commerce_order',
+      'label' => t('Re-calculate sales tax using Cybersource'),
+      'configurable' => FALSE,
+      'triggers' => array('any'),
+      'behavior' => array('changes_property'),
+    ),
+  );
+}
+					</code></pre>
+					<pre><code class="php" data-trim contenteditable>
+/**
+ * Custom action callback to update sales tax for an order.
+ */
+function hunter_orders_update_sales_tax(&$order, $context) {
+  hunter_cart_cs_tax_order($order);
+}
+					</code></pre>
 				</section>
 
 				<section>
