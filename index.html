@@ -82,12 +82,17 @@
 					<ol>
 						<li>Allowing manual override of views sort order using 'draggable views'</li>
 						<li class="fragment">Uploading new products in bulk (and maintaining your sanity)</li>
-						<li class="fragment">Allowing admins to repost an order to the warehouse</li>
+						<li class="fragment">Allowing admins to run custom actions on an order</li>
 						<li class="fragment">Building a site for two different countries using domain context</li>
 						<li class="fragment">Integrating with fulfillment warehouses</li>
 						<li class="fragment">Integrating with Retail Pro</li>
 						<li class="fragment"><em>Effectively</em> using Geo IP Lookup to get customers to the right site</li>
 					</ol>
+					<aside class="notes" data-markdown>
+						* This technique isn't commerce-specific
+						* Specifically, using feeds.  Mostly tips and tricks
+						* Specifically, recalculating sales tax for an order (call to payment provider) and reposting an order to warehouse
+					</aside>
 				</section>
 
 				<section>
@@ -106,7 +111,7 @@
 					<h3>Why is this a terrible idea?</h3>
 					<div><img src="images/product-listing.png"/></div>
 					<ul>
-						<li class="fragment">Miserable to maintain</li>
+						<li class="fragment">Difficult to maintain</li>
 						<li class="fragment">Not flexible</li>
 					</ul>
 					<aside class="notes" data-markdown>
@@ -124,7 +129,7 @@
 
 				<section>
 					<h2>2. Uploading new products using feeds</h2>
-					<p>Problem: Several times a year, Hunter adds a lot of new product</p>
+					<p>Problem: Several times a year, Hunter adds <em>a lot</em> of new product</p>
 				</section>
 
 				<section>
@@ -146,48 +151,59 @@
 				</section>
 
 				<section>
-					<h2>3. Allowing admins to interact with the warehouse</h2>
-					<p>Problem: Admins want to be able to recalculate sales tax.</p>
+					<h2>3. Allowing admins to run custom actions on an order</h2>
+					<div>
+						<p>Problem: Admins want to re-post an order to the warehouse.</p>
+						<p class="fragment">Problem: Admins want to recalculate sales tax for an order.</p>
+					</div>
 				</section>
 
 				<section>
 					<h3>Original Solution</h3>
-					<p>Repost it from the command line.</p>
+					<p>Just take care of it on the command line...</p>
 					<p><br/></p>
-					<code class="fragment">$ drush ev hunter_cart_cs_tax_order($order);</code>
+					<small><code class="fragment">$ drush ev _hunter_orders_post_xml_to_ph($order, TRUE);</code></small>
 				</section>
 
 				<section>
 					<h3>A Better solution</h3>
-					<p>Create a custom bulk operation.</p>
+					<p>Create a custom <a href="https://www.drupal.org/project/views_bulk_operations">views bulk operation</a></p>
+					<div><img src="images/bulk-operations-default.png" ?></div>
+					<small><code>/admin/commerce/orders</code></small>
 				</section>
 
 				<section>
-
 					<pre><code class="php" data-trim contenteditable>
 /**
  * Implements hook_action_info().
  */
 function hunter_orders_action_info() {
   return array(
-    'hunter_orders_update_sales_tax' => array(
+    'hunter_orders_post_to_powerhouse' => array(
       'type' => 'commerce_order',
-      'label' => t('Re-calculate sales tax using Cybersource'),
+      'label' => t('Re-post to Powerhouse'),
       'configurable' => FALSE,
       'triggers' => array('any'),
-      'behavior' => array('changes_property'),
     ),
   );
 }
 					</code></pre>
-					<pre><code class="php" data-trim contenteditable>
+					<pre class="fragment"><code class="php" data-trim contenteditable>
 /**
- * Custom action callback to update sales tax for an order.
+ * Custom action callback to repost an order to Powerhouse.
  */
-function hunter_orders_update_sales_tax(&$order, $context) {
-  hunter_cart_cs_tax_order($order);
+function hunter_orders_post_to_powerhouse(&$order, $context) {
+  _hunter_orders_post_xml_to_ph($order, TRUE);
 }
 					</code></pre>
+				</section>
+
+				<section>
+					<div><img src="images/bulk-operations-new.png" ?></div>
+					<small><code>/admin/commerce/orders</code></small>
+					<aside class="notes" data-markdown>
+            * Multiple items at once isn't strictly necessary, but convenient, scalable, less error-prone
+          </aside>
 				</section>
 
 				<section>
