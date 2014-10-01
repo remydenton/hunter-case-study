@@ -53,7 +53,10 @@
 						<small>remydenton.github.io/hunter-case-study</small>
 					</p>
 					<aside class="notes" data-markdown>
-						Presentation is on github
+						* URL of online slides in case you want to follow along, study more closely after we've moved on
+						* while you're copying it down, a quick intro of Isovera:
+  						** Drupal consultancy and dev shop based in the Boston area.  focus exclusively on Drupal
+  						** Projects really run the gamut-- particular expertise in commerce, search
 					</aside>
 				</section>
 
@@ -64,9 +67,12 @@
 						<li class="fragment">This is the site we're talking about: <a href="us.hunterboots.com">us.hunterboots.com</a></li>
 						<li class="fragment">U.S. site launched on Drupal in Q4 2011</li>
 					</ul>
-
 					<aside class="notes" data-markdown>
-						
+						* A big fashion brand, bread and butter is <em>very</em> expensive rain boots.  redesigns, constant ad campagins, new product lines
+						* Launced 2011--early commerce days--you might think it's be outdated, but VERY active iteration.
+						   ** redesigns
+						   ** heavy growth -- before 2011, it was a brochure site
+						* More opportunity to learn from our mistakes.
 					</aside>
 				</section>
 
@@ -164,6 +170,10 @@
 				<section>
 					<h3>Low-tech solution</h3>
 					<p>Add products manually</p>
+					<aside class="notes" data-markdown>
+						* Okay for small uploads, but not scalable.
+					</aside>
+
 				</section>
 
 				<section>
@@ -189,6 +199,10 @@
 								<li class="fragment">Run only after uploading the images to the public files directory</li>
 							</ol>
 					</ol>
+					<aside class="notes" data-markdown>
+						* Displays: title, text fields, keywords (metadata)
+						** Related products
+
 				</section>
 
 				<section>
@@ -247,8 +261,11 @@ drupal_set_message(t('No product display with the display code %display_code exi
 						<li>Be very careful when updating existing commerce products
 							<div class="fragment"><img src="images/price-zero.png"/></div>
 						</li>
-						<li class="fragment">Import as published/enabled when developing, unpublished/disabled on production</li>
+						<li class="fragment">Import as published/enabled when testing, unpublished/disabled on production</li>
 					</ul>
+					<aside class="notes" data-markdown>
+						* Create a separate importer for imports.
+					</aside>
 				</section>
 
 				<section>
