@@ -49,14 +49,17 @@
 					<p>
 						<small>Presented by Rob Higgins and Remy Denton of <a href="http://isovera.com">Isovera</a></small>
 					</p>
+					<aside class="notes" data-markdown>
+						Presentation is on github
+					</aside>
 				</section>
 
 				<section>
 					<h2>A little background</h2>
 					<ul>
-						<li>Hunter Boots sells fashion apparel.</li>
+						<li>Hunter Boots sells fashion apparel</li>
 						<li class="fragment">This is the site we're talking about: <a href="us.hunterboots.com">us.hunterboots.com</a></li>
-						<li class="fragment">North American site launched on Drupal in Q4 2011</li>
+						<li class="fragment">U.S. site launched on Drupal in Q4 2011</li>
 					</ul>
 
 					<aside class="notes" data-markdown>
@@ -80,7 +83,7 @@
 				<section>
 					<h2>What we're focusing on</h2>
 					<ol>
-						<li>Allowing manual override of views sort order using 'draggable views'</li>
+						<li>Arbitrarily sorting a view using Draggable Views</li>
 						<li class="fragment">Uploading new products in bulk (and maintaining your sanity)</li>
 						<li class="fragment">Allowing admins to run custom actions on an order</li>
 						<li class="fragment">Building a site for two different countries using domain context</li>
@@ -111,13 +114,13 @@
 					<h3>Why is this a terrible idea?</h3>
 					<div><img src="images/product-listing.png"/></div>
 					<ul>
-						<li class="fragment">Difficult to maintain</li>
+						<li>Difficult to maintain</li>
 						<li class="fragment">Not flexible</li>
 					</ul>
 					<aside class="notes" data-markdown>
 						Describe moving one product to the top of the list
-						   - Guess at the weight
-						   - Even worse if moving to a specific spot (must know weight of before and after nodes)
+						   * Guess at the weight
+						   * Even worse if moving to a specific spot (must know weight of before and after nodes)
 						Flexibility: pages using the same view with different contextual filters
 					</aside>
 				</section>
@@ -128,26 +131,95 @@
 				</section>
 
 				<section>
-					<h2>2. Uploading new products using feeds</h2>
-					<p>Problem: Several times a year, Hunter adds <em>a lot</em> of new product</p>
+					<h3>How this works</h3>
+					<ol>
+						<li>Add a new attachment display to your view, format as 'table'</li>
+						<li class="fragment">Ensure the filter criteria (including contextual filters) match</li>
+						<li class="fragment">Add 'Draggableviews: Weight' as a sort criterion</li>
+						<li class="fragment">Update permissions so only admins can see the attachment</li>
+					</ol>
+					<p><br /></p>
+					<div class="fragment"><small>For more info, see the "Creating a sorting interface" section of the <a href="https://www.drupal.org/node/283498">Draggable views documentation</a></small></div>
 				</section>
 
 				<section>
-					<h3>How it works</h3>
+					<img src="images/reordering.gif" />
+				</section>
+
+				<section>
+					<h3>Bonus Tip</h3>
+					If views caching is enabled, use the <a href="https://www.drupal.org/project/cache_actions">cache actions</a> module.
+					<img class="fragment" src="images/cache-actions-rule.png" />
+				</section>
+
+				<section>
+					<h2>2. Uploading new products using feeds</h2>
+					<p>Problem: Several times a year, Hunter adds <em>a lot</em> of new product</p>
+					<aside class="notes" data-markdown>
+						* This isn't new (feeds is the obvious solution), but there are many ways to do it
+						* Share some tips and tricks
+					</aside>
+				</section>
+
+				<section>
+					<h3>Low-tech solution</h3>
+					<p>Add products manually</p>
+				</section>
+
+				<section>
+					<h3>Better Solution: Feeds</h3>
 					<p>Hunter sends us three things:</p>
 					<ol>
-						<li class="fragment">A spreadsheet of product display nodes</li>
-						<li class="fragment">A spreadsheet of commerce products</li>
-						<li class="fragment">A directory of images</li>
+						<li class="fragment">A spreadsheet of new product display nodes</li>
+						<li class="fragment">A spreadsheet of new commerce products</li>
+						<li class="fragment">A directory of images (referenced in the product spreadsheet)</li>
 					</ol>
-					<p>We run two imports:</p>
+				</section>
+
+				<section>
+					<p>Then, we run two imports:</p>
 					<ol>
-						<li class="fragment">Product display importer</li>
+						<li class="fragment">Product display node importer</li>
 						<li class="fragment">Commerce product importer</li>
+							<ol type="a" style="list-style-type: lower-alpha;">
+								<li class="fragment">Uses <a href="https://www.drupal.org/project/commerce_feeds">Commerce Feeds</a> module</li>
+								<li class="fragment">Run only after uploading the images to the public files directory</li>
+							</ol>
 					</ol>
-					<aside class="notes" data-markdown>
-						- Standard feeds importm, but some tips and tricks
-					</aside>
+				</section>
+
+				<section>
+					<h3>Feeds Best practices</h2>
+					<div>
+						<p>Create a spec for the spreadsheets</p>
+						<small>(for both admins and yourself)</small>
+						<div class="fragment"><img src="images/feeds-spec.png"/></div>
+					</div>
+				</section>
+
+				<section>
+					<h3>Feeds Best practices</h2>
+					<div>
+						<p>Set error messages whenever you possibly can</p>
+						<small>(errors in the data are practically guaranteed)</small>
+						<p><br/></p>
+						<div class="fragment">
+						<pre><code class="php" data-trim contenteditable>
+drupal_set_message(t('No product display with the display code %display_code exists.',
+  array('%display_code' => $display_code)), 'warning', FALSE);
+				    </code></pre>
+				    </div>
+					</div>
+				</section>
+
+				<section>
+					<h3>Feeds Best practices</h2>
+					<ul>
+						<li>Be very careful when updating existing commerce products
+							<div class="fragment"><img src="images/price-zero.png"/></div>
+						</li>
+						<li class="fragment">Import as published/enabled when developing, unpublished/disabled on production</li>
+					</ul>
 				</section>
 
 				<section>
@@ -166,7 +238,7 @@
 				</section>
 
 				<section>
-					<h3>A Better solution</h3>
+					<h3>A Better Solution</h3>
 					<p>Create a custom <a href="https://www.drupal.org/project/views_bulk_operations">views bulk operation</a></p>
 					<div><img src="images/bulk-operations-default.png" ?></div>
 					<small><code>/admin/commerce/orders</code></small>
