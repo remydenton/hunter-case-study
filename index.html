@@ -288,14 +288,83 @@ function hunter_orders_post_to_powerhouse(&$order, $context) {
 
 				<section>
 					<h2>5. Integrating with fulfillment warehouses</h2>
+					<ol>
+						<li class="fragment">We integrate with two warehouses, Powerhouse for the US and NLS for CA</li>
+						<li class="fragment">Use XML feeds of placed orders to initiate communication</li>
+						<li class="fragment">Then we use Services to recieve updates for the orders, status changes, shipping info and returns</li>
+					</ol>
 					<aside class="notes" data-markdown>
             * We must integrate with NLS(Canada) and Powerhouse(USA) warehouse systems.
             * Based on feeds and services
+            * Common issues are performance, sync issues, and error handling
           </aside>
 				</section>
 
+        <section>
+          <h2>Feed of orders polled by warehouses to initiate communication</h2>
+          <ol>
+            <li class="fragment">This is built on cron when an order reaches Checkout: Complete status and payment is authorized</li>
+            <li class="fragment">The warehouses poll these feeds for new orders and post a response to a Service API to confirm receipt, this order is now Pending</li>
+            <li class="fragment">This feed is country specific based on contexts and domain name</li>
+          </ol>
+          <aside class="notes" data-markdown>
+
+          </aside>
+        </section>
+        
+        <section>
+          <h2>Example Feed Part 1: The Customer Info</h2>
+          <ul>
+            <li class="fragment">
+              Ths section contains shipping and billing information, this will be downloaded and saved into the warehouses management system
+              <img src="./img/orderfeed.jpg" />
+            </li>
+          </ul>
+          <aside class="notes" data-markdown>
+
+          </aside>
+        </section>
+
+        <section>
+          <h2>Example Feed Part 2: The Order Info</h2>
+          <ul>
+            <li class="fragment">
+              This section contains all the order info, each line item is a product, with the necessary info for the warehouse staff to pick, pack and ship this order.
+              <img src="./img/orderfeed2.png" />
+            </li>
+          </ul>
+          <aside class="notes" data-markdown>
+
+          </aside>
+        </section>
+        
+        <section>
+          <h2>Warehouse use Service API's to communicate back after order is picked up</h2>
+          <ol>
+            <li class="fragment">Every response is queued and processed using the core Queue API. This drastically cuts back on load during bulk posts</li>
+            <li class="fragment">The warehouses post an initial reciept to the OrderUpdate Service. This makes the order pending</li>
+            <li class="fragment">The warehouses will then post another Update with shipping info once they have it. This triggers the capturing of payment, and marks order as complete</li>
+            <li class="fragment">Warehouses use a ReturnOrder Service to post returns when they recieve them. This follows the same Queued messaging protocol of Orders</li>
+          </ol>
+          <aside class="notes" data-markdown>
+
+          </aside>
+        </section>
+        
+        <section>
+          <h2>Order Service Example</h2>
+          <ol>
+            <li class="fragment">The actual processing code is out of scope of this presentation. But you can see how pretty much anything can be accomplished using this methodology</li>
+            <li class="fragment">It is STRONGLY recommended to use transactions for all of your updates to the Commerce Order to ensure data integrity</li>           
+          </ol>
+          <img class="fragment" src="./img/orderservice.jpg">
+          <aside class="notes" data-markdown>
+
+          </aside>
+        </section>           
+
 				<section>
-					<h2>6. Integrating with Retail Pro</h2>
+					<h2>6. Integrating with RetailPro</h2>
 					<ul>
 					   <li class="fragment">Retailpro is a back-office accounting software product</li>
 					   <li class="fragment">Ideal integration is Website -> Fulfillment -> Back-Office, unfourtunately this was not possible with the Canadian warehouse.</li>
@@ -384,6 +453,19 @@ function hunter_orders_post_to_powerhouse(&$order, $context) {
           </aside>
         </section>
 
+        <section>
+          <h2>Issue #3 "Must Eventually End up in a Private FTP Server Location" - Solution?: CHROOTED FTP and CRON</h2>
+          <ul>
+            <li class="fragment">Save XML files to the Drupal private files location. This should be above the WebRoot.</li>
+            <li class="fragment">Set up an FTP server, which lands in a CHROOTED home directory. CHROOTING is beyond this presentation but necessary for security</li>
+            <li class="fragment">Since we don't want the webserver to be able to write directly to the FTP location, use a root cron job to sync files to the FTP from private files</li>
+            <li class="fragment">This has the added benefit of creating an archive of all files, regardless of what the Retailpro FTP account does with them</li>
+          </ul>
+          <aside class="notes" data-markdown>
+            * retailpro deletes files upon download. Archive is helpful
+          </aside>
+        </section>
+
 				<section>
 					<h2>7. Using GEO IP lookup</h2>
 					<img width="850" src="./img/countryselector.jpg" />
@@ -394,7 +476,7 @@ function hunter_orders_post_to_powerhouse(&$order, $context) {
 				</section>
 				
         <section>
-          <h2>7.1. Utlizes SmartIP in conjunction with custom AJAX callback</h2>
+          <h2>Utlizes SmartIP in conjunction with custom AJAX callback</h2>
           <ol>
             <li class="fragment">Integrates with Maxmind Geo Lookup services using the SmartIP module</li>
             <li class="fragment">
@@ -407,6 +489,20 @@ function hunter_orders_post_to_powerhouse(&$order, $context) {
             * ajax callback to get around varnish, must exclude /ajax paths from varnish cache.
             * must set necessary proxy values in settings.php to avoid the drupal ip() function from returning proxys IP
             * touch on the fact that the hunter_misc_get_country_code utilizes the functions discussed in the country context/settings info earlier
+          </aside>
+        </section>
+
+        <section>
+          <h2>Javascript calls AJAX function and provides Popup</h2>
+          <ol>
+            <li class="fragment">
+              Drupal Javascript Behavior handles cookie get/set and logic for which links to display. If cookie is not set and the user is not on the site that matches their IP location, popup is shown.
+              <img class="fragment" src="./img/geoip1.jpg" />
+              <img class="fragment" src="./img/geoip2.jpg" />
+            </li>
+          </ol>
+          <aside class="notes" data-markdown>
+            * JS checks and sets cookie
           </aside>
         </section>
 
