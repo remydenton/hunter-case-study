@@ -49,13 +49,16 @@
 					<p>
 						<small>Presented by Rob Higgins and Remy Denton of <a href="http://isovera.com">Isovera</a></small>
 					</p>
+					<p>
+						<small>remydenton.github.io/hunter-case-study</small>
+					</p>
 					<aside class="notes" data-markdown>
 						Presentation is on github
 					</aside>
 				</section>
 
 				<section>
-					<h2>A little background</h2>
+					<h2>The project: A little background</h2>
 					<ul>
 						<li>Hunter Boots sells fashion apparel</li>
 						<li class="fragment">This is the site we're talking about: <a href="us.hunterboots.com">us.hunterboots.com</a></li>
@@ -63,17 +66,14 @@
 					</ul>
 
 					<aside class="notes" data-markdown>
-						* If you were a fasion forward woman in New York, you'd know this.  But you're a Drupal developer.
-						* Specifically, <em>very</em> expensive rain boots.
-						* Launced 2011, but VERY active iteration.  constant redesigns, new product lines, expansion to Canada
-							* More opportunity to learn from our mistakes.
+						
 					</aside>
 				</section>
 
 				<section>
-					<h2>What we're focusing on</h2>
+					<h2>What we're focusing on today</h2>
 					<small>(So you know whether it's worth sticking around)</small>
-					<p class="fragment"><br />7 Specific problems and our clever solutions</p>
+					<p class="fragment"><br />7 specific problems and our clever solutions</p>
 					<aside class="notes" data-markdown>
 						* The project is enormous.  Rather than try to talk about everything, we've picked a few favorite parts.
 						* Common problems, you've probably encountered in one form or another, solutions you might use.
@@ -81,7 +81,7 @@
 				</section>
 
 				<section>
-					<h2>What we're focusing on</h2>
+					<h2>What we're focusing on today</h2>
 					<ol>
 						<li>Arbitrarily sorting a view using Draggable Views</li>
 						<li class="fragment">Uploading new products in bulk (and maintaining your sanity)</li>
@@ -180,6 +180,9 @@
 					<p>Then, we run two imports:</p>
 					<ol>
 						<li class="fragment">Product display node importer</li>
+							<ol type="a" style="list-style-type: lower-alpha;">
+								<li class="fragment">Run this import a second time to add related products</li>
+							</ol>
 						<li class="fragment">Commerce product importer</li>
 							<ol type="a" style="list-style-type: lower-alpha;">
 								<li class="fragment">Uses <a href="https://www.drupal.org/project/commerce_feeds">Commerce Feeds</a> module</li>
@@ -189,12 +192,38 @@
 				</section>
 
 				<section>
-					<h3>Feeds Best practices</h2>
+					<h3>Attaching commerce products to displays</h3>
+					<ul>
+						<li>Arbitrary, unique "style code"</li>
+						<li>Attaching happens during the import of <em>either</em> feed</li>
+					</ul>
+					<aside class="notes" data-markdown>
+						* Why either?  
+							* It's okay to run either feed as many times as you want.
+							* Flexibility in case you're dealing with a mix of new and existing data.
+					</aside>
+				</section>
+
+				<section>
+					<h3>Massaging the data</h3>
+					<ul>
+						<li>Leverage feeds tamper when possible</li>
+							<img src="images/feeds-tamper.png"/>
+						<li class="fragment">It's okay to use formulas in your spreadsheet</li>
+							<img class="fragment" src="images/feeds-size-fit.png"/>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Feeds Best practices</h3>
 					<div>
 						<p>Create a spec for the spreadsheets</p>
 						<small>(for both admins and yourself)</small>
 						<div class="fragment"><img src="images/feeds-spec.png"/></div>
 					</div>
+					<aside class="notes" data-markdown>
+						* Could be six months between imports—document for yourself!
+					</aside>
 				</section>
 
 				<section>
@@ -579,9 +608,12 @@ function hunter_orders_post_to_powerhouse(&$order, $context) {
         </section>
 
 				<section>
-					<h1>THE END</h1>
+					<h1>That's all, folks!</h1>
 					<h3>Rob Higgins and Remy Denton</h3>
-					<h3><a href="Isovera.com"></a></h3>
+					<a mailto="rhiggins@isovera.com">rhiggins@isovera.com</a> and
+					<a mailto="rdenton@isovera.com">rdenton@isovera.com</a>
+					<p><br /></p>
+					<small>Special thanks to Commerce Guys</small>
 				</section>
 
 			</div>
